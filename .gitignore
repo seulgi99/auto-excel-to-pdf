@@ -1,0 +1,12 @@
+*.spec
+.idea
+dist
+__pycache__
+.DS_Store
+hidden/**
+hidden.**
+pdf
+excel
+requirement.txt
+env
+venv
