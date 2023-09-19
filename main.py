@@ -16,11 +16,10 @@ if __name__ == '__main__':
             continue
 
         print('이 프로그램은 xlsx파일에만 사용이 가능합니다. xls파일이라면 변환해주세요.')
-        file_name = input('작업하고자 하는 xlsx파일을 입력해주세요. (확장자 즉, .xlsx은 입력하지 말고 파일명만 입력해주세요.) : ')
-        file = os_command.check_file_name(file_name)
+        # 엑셀 파일의 이름을 가져옵니다.
+        file = os_command.get_xlsx_file()
 
         if file == "":
-            print('해당 파일을 찾을수 없거나 xlsx파일이 아닙니다.')
             continue
 
         if execute_type == '1':

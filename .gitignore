@@ -1,6 +1,8 @@
 *.spec
 .idea
 dist
+build
+exceltopdf.spec
 __pycache__
 .DS_Store
 hidden/**

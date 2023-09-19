@@ -1,6 +1,6 @@
 import openpyxl
 from openpyxl import Workbook
-from function import func_excel
+from function import func_excel, func_pdf
 
 def execute(file) :
     workbook = openpyxl.load_workbook(file)
@@ -29,7 +29,7 @@ def execute(file) :
         # 파일 이름 지정
         name_cell = 'K' + str(target_row[0])
         new_excel_name = './excel/' + source_sheet[name_cell].value + '.xlsx'
-
+        new_pdf_name = './pdf/' + source_sheet[name_cell].value + '.pdf'
         # 필요없는 데이터 지우기 ( index 및 파일명)
         func_excel.delete_column(source_sheet, 'J', 8, end_row)
         func_excel.delete_column(source_sheet, 'K', 8, end_row)
@@ -40,3 +40,5 @@ def execute(file) :
         print(new_excel_name + '파일 생성 완료')
         # 엑셀 파일 닫기
         workbook.close()
+
+        func_pdf.excel_to_pdf(new_excel_name, new_pdf_name)
