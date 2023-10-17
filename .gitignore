@@ -9,6 +9,9 @@ hidden/**
 hidden.**
 pdf
 excel
+dataset
+*.xlsx
+*.xlx
 requirement.txt
 env
 venv

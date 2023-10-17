@@ -2,10 +2,10 @@ from openpyxl.styles import PatternFill
 
 
 def check_line(sheet):
-    max_column = sheet.max_row
-    max_column = int(max_column)
-    print(f"데이터가 존재하는 열의 수: {max_column}")
-    return max_column
+    max_row = sheet.max_row
+    max_row = int(max_row)
+    print(f"데이터가 존재하는 행의 수: {max_row}")
+    return max_row
 
 # 거래내역 조회서 자동화에서만 쓰는 것임
 def check_max_index(sheet, column, start_row, end_row):
