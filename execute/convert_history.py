@@ -42,3 +42,7 @@ def execute(file) :
         workbook.close()
 
         func_pdf.excel_to_pdf(new_excel_name, new_pdf_name)
+
+    func_pdf.merge_pdf()
+    input('작업이 완료되었습니다. 엔터를 누르면 종료합니다.')
+    exit(0)

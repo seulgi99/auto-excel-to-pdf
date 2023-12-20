@@ -16,7 +16,7 @@ if __name__ == '__main__':
             file = os_command.get_xlsx_file()
             convert_history.execute(file)
 
-        if execute_type == '2':
+        elif execute_type == '2':
             file = os_command.get_xlsx_file()
             data_set = os_command.get_data_set_xlsx_file()
             convert_tax_bill.execute(file, data_set)

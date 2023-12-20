@@ -12,6 +12,7 @@ excel
 dataset
 *.xlsx
 *.xlx
+*.pdf
 requirement.txt
 env
 venv
