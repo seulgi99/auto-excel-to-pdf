@@ -33,15 +33,19 @@ def execute(file, data_set) :
         name_cell = 'K' + str(target_row[0])
         # 월 수 지정
         month_cell = 'L' + str(target_row[0])
+        month_str = str(source_sheet[month_cell].value) + "월 "
+        if source_sheet[month_cell].value == "" or source_sheet[month_cell].value is None:
+            month_str = ""
         # 구분(입금/출금) 지정
         type_cell = 'M' + str(target_row[0])
+
         # 이름 + 월 + 구분으로 파일 이름 지정
-        file_name = source_sheet[name_cell].value + " " +source_sheet[month_cell].value + " " + source_sheet[type_cell].value
+        file_name = source_sheet[name_cell].value + " " + month_str + source_sheet[type_cell].value
 
         # 금액모아서 data set 과 비교
         total_money = 0
         for row in target_row:
-            total_money += int(source_sheet["E" + row].value)
+            total_money += int(source_sheet["E" + str(row)].value)
 
         for data in history_data_set_info:
             if source_sheet[name_cell].value == data[0] and total_money == int(data[1]):
@@ -83,10 +87,12 @@ def get_history_data_set_info(data_set):
     for i in range(end_row - 2):
         line = []
         row = i + 3
+        if data_set_sheet[f'A{row}'].value == "" or data_set_sheet[f'A{row}'].value is None:
+            break
         line.append(str(data_set_sheet[f'A{row}'].value))
-        line.append(str(data_set_sheet[f'B{row}'].value))
+        line.append(int(data_set_sheet[f'B{row}'].value))
         data_set_info.append(line)
 
     workbook.close()
 
-    return data_set_info[0]
+    return data_set_info
