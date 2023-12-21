@@ -30,17 +30,17 @@ def get_xlsx_file():
         print_error.execute("프로그램을 종료해주세요.")
 
 
-def get_data_set_xlsx_file():
+def get_data_set_xlsx_file(dataset):
     try:
-        os.chdir("./dataset")
+        os.chdir("./" + dataset)
     except:
-        print_error.execute("dataset폴더가 존재하지 않습니다.")
+        print_error.execute(dataset + "폴더가 존재하지 않습니다.")
     current_directory = os.getcwd()
     data_set_file = glob.glob(os.path.join(current_directory, "*.xlsx"))
     if len(data_set_file) == 1:
         os.chdir("..")
         return data_set_file[0]
     else:
-        print("dataset 폴더에 xlsx파일이 한개가 아닙니다. 해당 폴더에 xlsx파일이 하나만 존재하도록 하고 다시 실행해주세요.")
+        print(dataset + "폴더에 xlsx파일이 한개가 아닙니다. 해당 폴더에 xlsx파일이 하나만 존재하도록 하고 다시 실행해주세요.")
         print_error.execute("프로그램을 종료해주세요.")
 

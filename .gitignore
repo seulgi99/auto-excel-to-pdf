@@ -10,6 +10,7 @@ hidden.**
 pdf
 excel
 dataset
+history_dataset
 *.xlsx
 *.xlx
 *.pdf
