@@ -6,10 +6,7 @@ import os,time
 
 def execute(file, data_set):
     # data set 가져오기
-    set_list = get_data_set_info(data_set)
-
-    data_set_info = set_list[0]
-    industry_academic_set_info = set_list[1]
+    data_set_info = get_data_set_info(data_set)
 
     # 시트별 pdf변환
     excel = win32.Dispatch("Excel.Application")
@@ -40,13 +37,13 @@ def execute(file, data_set):
             if business_name != "홍익대학교 산학협력단":
                 for data in data_set_info:
                     if business_name == data[0]:
-                        file_name = data[1] + " " + data[2] + "월"
+                        file_name = data[2] + " " + data[3] + "월"
             else:
                 # 금액 뽑아오기 (B17 위치)
                 price = str(int(new_sheet.Range("B17").Value))
-                for data in industry_academic_set_info:
-                    if price == data[0]:
-                        file_name = data[1] + " " + data[2] + "월"
+                for data in data_set_info:
+                    if price == data[1] and data[0] == "홍익대학교 산학협력단":
+                        file_name = data[2] + " " + data[3] + "월"
 
             if file_name != "":
                 # excel로 저장할 이름
@@ -89,28 +86,17 @@ def get_data_set_info(data_set):
     workbook = openpyxl.load_workbook(data_set)
 
     data_set_sheet = workbook["일반 데이터"]
-    industry_academic_set_sheet = workbook["산학협력단"]
 
     end_row = func_excel.check_line(data_set_sheet)  # 데이터가 존재하는 마지막 열
     data_set_info = []
     for i in range(end_row - 2):
         line = []
         row = i + 3
-        line.append(str(data_set_sheet[f'A{row}'].value))
-        line.append(str(data_set_sheet[f'B{row}'].value))
-        line.append(str(data_set_sheet[f'C{row}'].value))
+        line.append(str(data_set_sheet[f'A{row}'].value)) # 상호명
+        line.append(str(data_set_sheet[f'B{row}'].value)) # 금액
+        line.append(str(data_set_sheet[f'C{row}'].value)) # 생성할 파일 명
+        line.append(str(data_set_sheet[f'D{row}'].value)) # 월
         data_set_info.append(line)
 
-    end_row = func_excel.check_line(industry_academic_set_sheet)  # 데이터가 존재하는 마지막 열
-    industry_academic_set_info = []
-    for i in range(end_row - 2):
-        line = []
-        row = i + 3
-        line.append(str(industry_academic_set_sheet[f'A{row}'].value))
-        line.append(str(industry_academic_set_sheet[f'B{row}'].value))
-        line.append(str(industry_academic_set_sheet[f'C{row}'].value))
-        industry_academic_set_info.append(line)
     workbook.close()
-
-    set_list = [data_set_info, industry_academic_set_info]
-    return set_list
+    return data_set_info

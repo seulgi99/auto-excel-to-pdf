@@ -2,9 +2,11 @@ import openpyxl
 from openpyxl import Workbook
 from function import func_excel, func_pdf
 
+
+
 def execute(file, data_set) :
     # data set 가져오기
-    data_set_info = get_data_set_info(data_set)
+    history_data_set_info = get_history_data_set_info(data_set)
 
     workbook = openpyxl.load_workbook(file)
     source_sheet = workbook.active
@@ -43,10 +45,10 @@ def execute(file, data_set) :
         for row in target_row:
             total_money += int(source_sheet["E" + row].value)
 
-        for data in data_set_info:
-            if source_sheet[name_cell].value == data[2] and total_money == int(data[1]):
+        for data in history_data_set_info:
+            if source_sheet[name_cell].value == data[0] and total_money == int(data[1]):
                 break
-            if data == data_set_info[-1]:
+            if data == history_data_set_info[-1]:
                 file_name +=" - 불일치"
 
 
@@ -70,24 +72,3 @@ def execute(file, data_set) :
     func_pdf.merge_pdf()
     input('작업이 완료되었습니다. 엔터를 누르면 종료합니다.')
     exit(0)
-
-#history_dataset 정보 가져오기
-def get_data_set_info(data_set):
-    # data set 가져오기
-    workbook = openpyxl.load_workbook(data_set)
-
-    data_set_sheet = workbook["일반 데이터"]
-
-    end_row = func_excel.check_line(data_set_sheet)  # 데이터가 존재하는 마지막 열
-    data_set_info = []
-    for i in range(end_row - 2):
-        line = []
-        row = i + 3
-        line.append(str(data_set_sheet[f'A{row}'].value)) # 상호명
-        line.append(str(data_set_sheet[f'B{row}'].value)) # 금액
-        line.append(str(data_set_sheet[f'C{row}'].value)) # 생성할 파일 명
-        line.append(str(data_set_sheet[f'D{row}'].value)) # 월
-        data_set_info.append(line)
-
-    workbook.close()
-    return data_set_info
