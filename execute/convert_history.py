@@ -33,15 +33,19 @@ def execute(file, data_set) :
         name_cell = 'K' + str(target_row[0])
         # 월 수 지정
         month_cell = 'L' + str(target_row[0])
+        month_str = str(source_sheet[month_cell].value) + "월 "
+        if source_sheet[month_cell].value == "" or source_sheet[month_cell].value is None:
+            month_str = ""
         # 구분(입금/출금) 지정
         type_cell = 'M' + str(target_row[0])
+
         # 이름 + 월 + 구분으로 파일 이름 지정
-        file_name = source_sheet[name_cell].value + " " +source_sheet[month_cell].value + " " + source_sheet[type_cell].value
+        file_name = source_sheet[name_cell].value + " " + month_str + source_sheet[type_cell].value
 
         # 금액모아서 data set 과 비교
         total_money = 0
         for row in target_row:
-            total_money += int(source_sheet["E" + row].value)
+            total_money += int(source_sheet["E" + str(row)].value)
 
         for data in data_set_info:
             if source_sheet[name_cell].value == data[2] and total_money == int(data[1]):
@@ -71,7 +75,6 @@ def execute(file, data_set) :
     input('작업이 완료되었습니다. 엔터를 누르면 종료합니다.')
     exit(0)
 
-#history_dataset 정보 가져오기
 def get_data_set_info(data_set):
     # data set 가져오기
     workbook = openpyxl.load_workbook(data_set)
