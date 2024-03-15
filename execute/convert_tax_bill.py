@@ -33,46 +33,37 @@ def execute(file, data_set):
             # 상호명 뽑아오기 (Y4 위치)
             business_name =new_sheet.Range("X4").Value
             print(f'상호명 : {business_name}')
-            file_name = ""
-            if business_name != "홍익대학교 산학협력단":
-                for data in data_set_info:
-                    if business_name == data[0]:
-                        file_name = data[2] + " " + data[3] + "월"
-            else:
-                # 금액 뽑아오기 (B17 위치)
-                price = str(int(new_sheet.Range("B17").Value))
-                for data in data_set_info:
-                    if price == data[1] and data[0] == "홍익대학교 산학협력단":
-                        file_name = data[2] + " " + data[3] + "월"
+            # 금액 뽑아오기 (B17 위치)
+            price = str(int(new_sheet.Range("B17").Value))
 
-            if file_name != "":
-                # excel로 저장할 이름
-                new_excel_name = './excel/' + file_name + '.xlsx'
-                while (True):
-                    if (os.path.exists(new_excel_name)):
-                        file_name = file_name + '-중복'
-                        new_excel_name = './excel/' + file_name + '.xlsx'
-                    else:
-                        break
-                # PDF로 저장할 이름
-                new_pdf_name = './pdf/' + file_name + '.pdf'
-                new_sheet.SaveAs(os.path.abspath(new_excel_name))
-                print(f'{new_excel_name} 저장 완료')
-                new_workbook.ExportAsFixedFormat(0, os.path.abspath(new_pdf_name))
-                print(f'{new_pdf_name} 저장 완료')
-                print()
-                new_workbook.Close(SaveChanges=False)
-            else:
-                new_workbook.Close(SaveChanges=False)
-                work_book.Close(SaveChanges=False)
-                excel.Quit()
-                print_error.execute("data set에 매칭되는 내용이 없습니다.")
+            file_name = ""
+            for data in data_set_info:
+                if business_name == data[0] and price == data[1]:
+                    file_name = data[2] + " " + data[3] + "월"
+
+            if file_name == "":
+                file_name = "기타"
+            # excel로 저장할 이름
+            new_excel_name = './excel/' + file_name + '.xlsx'
+            while (True):
+                if (os.path.exists(new_excel_name)):
+                    file_name = file_name + '-중복'
+                    new_excel_name = './excel/' + file_name + '.xlsx'
+                else:
+                    break
+            # PDF로 저장할 이름
+            new_pdf_name = './pdf/' + file_name + '.pdf'
+            new_sheet.SaveAs(os.path.abspath(new_excel_name))
+            print(f'{new_excel_name} 저장 완료')
+            new_workbook.ExportAsFixedFormat(0, os.path.abspath(new_pdf_name))
+            print(f'{new_pdf_name} 저장 완료')
+            print()
+            new_workbook.Close(SaveChanges=False)
 
 
         work_book.Close(SaveChanges=False)
         excel.Quit()
-        input('작업이 완료되었습니다. 엔터를 누르면 종료합니다.')
-        exit(0)
+        input('작업이 완료되었습니다. 엔터를 누르면 메뉴로 돌아갑니다.')
 
     except Exception as e:
         new_workbook.Close(SaveChanges=False)

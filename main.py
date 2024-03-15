@@ -14,12 +14,14 @@ if __name__ == '__main__':
         if execute_type == '1':
             file = os_command.get_xlsx_file()
             data_set = os_command.get_data_set_xlsx_file("dataset")
-            convert_history.execute(file, data_set)
+            if file != "" and data_set != "":
+                convert_history.execute(file, data_set)
 
         elif execute_type == '2':
             file = os_command.get_xlsx_file()
             data_set = os_command.get_data_set_xlsx_file("dataset")
-            convert_tax_bill.execute(file, data_set)
+            if file != "" and data_set != "":
+                convert_tax_bill.execute(file, data_set)
 
         # elif execute_type == '3':
         #     file = os_command.get_xlsx_file()

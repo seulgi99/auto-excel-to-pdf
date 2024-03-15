@@ -26,8 +26,9 @@ def get_xlsx_file():
     if len(xlsx_files) == 1:
         return xlsx_files[0]
     else:
-        print("xlsx파일이 한개가 아닙니다. 해당 폴더에 xlsx파일이 하나만 존재하도록 하고 다시 실행해주세요.")
-        print_error.execute("프로그램을 종료해주세요.")
+        print("xlsx파일이 한개가 아니거나 열려있습니다.")
+        print_error.not_exit(" 해당 폴더에 xlsx파일이 하나만 존재하도록 하고 엔터를 눌러주세요.")
+        return ""
 
 
 def get_data_set_xlsx_file(dataset):
@@ -41,6 +42,6 @@ def get_data_set_xlsx_file(dataset):
         os.chdir("..")
         return data_set_file[0]
     else:
-        print(dataset + "폴더에 xlsx파일이 한개가 아닙니다. 해당 폴더에 xlsx파일이 하나만 존재하도록 하고 다시 실행해주세요.")
-        print_error.execute("프로그램을 종료해주세요.")
-
+        print(dataset + "폴더에 xlsx파일이 한개가 아니거나 열려있습니다.")
+        print_error.not_exit("해당 폴더에 xlsx파일이 하나만 존재하도록 하고 다시 실행해주세요.")
+        return ""

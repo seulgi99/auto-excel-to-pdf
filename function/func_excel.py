@@ -18,9 +18,8 @@ def check_max_index(sheet, column, start_row, end_row):
             if max_index is None or cell_value > max_index:
                 max_index = cell_value
         else:
-            print(f'{column}{row}이 비었거나 숫자가 아닙니다.')
-            input('엔터를 입력하면 종료합니다.')
-            exit()
+            raise Exception(f'{column}{row}이 비었거나 숫자가 아닙니다.')
+
 
     print(f'최종 분할되어 나올 pdf의 개수: {max_index}')
     return max_index
@@ -34,6 +33,8 @@ def get_target_row_list(sheet, index, column, start_row, end_row):
         cell_value = int(cell_value)
         if cell_value == index:
             target_row_list.append(row)
+    if not target_row_list :
+        raise Exception(f'{index}번이 들어있지 않습니다.')
     return target_row_list
 def color_cell_yellow(sheet, row, column):
     cell = sheet[column + str(row)]
