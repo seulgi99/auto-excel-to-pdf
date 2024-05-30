@@ -23,10 +23,11 @@ if __name__ == '__main__':
             if file != "" and data_set != "":
                 convert_tax_bill.execute(file, data_set)
 
-        # elif execute_type == '3':
-        #     file = os_command.get_xlsx_file()
-        #     data_set = os_command.get_data_set_xlsx_file("dataset")
-        #     update_payment_graph.execute(file, data_set)
+        elif execute_type == '3':
+            file = os_command.get_xlsx_file()
+            data_set = os_command.get_data_set_xls_file("dataset_graph")
+            update_payment_graph.execute(file, data_set)
+
         else:
             print('해당하는 작업이 없습니다. 다시 입력해주세요.')
             continue
