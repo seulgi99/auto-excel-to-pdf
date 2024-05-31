@@ -107,7 +107,7 @@ def insert_value_to_merged_cell(filename, row, text):
 
 def format_date(date_str):
     # 문자열을 '.'을 기준으로 분리
-    parts = date_str.split('.')
+    parts = date_str.split('-')
 
     # 연, 월, 일을 각각 추출
     year, month, day = parts[0], parts[1], parts[2]
