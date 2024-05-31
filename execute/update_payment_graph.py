@@ -7,24 +7,29 @@ import re
 
 # file : 그래프를 그리는 파일, data_set : 정보를 가져오는 파일
 def execute(file, data_set):
-    # data set 가져오기
+    # data set 가져오기 (엑셀 파일 형식의 2차원배열)
     data = func_excel.get_history_data_set_info(data_set)
 
-    # 그래프의 업체명 모두 가져오기
-    institutions = func_excel.get_column_data(file, 'B')
+    # 그래프의 검색어 모두 가져오기
+    keywords = func_excel.get_column_data(file, 'C')
 
-    # data_set에서 뽑아온 결의 마다 루프 (resolution : 결의)
+    # 그래프의 금액 모두 가져오기
+    money_values = func_excel.get_column_data(file, 'F')
+
+    # data_set에서 뽑아온 결의 한 행 마다 루프 (resolution : 결의)
     for resolution in data:
-        res_title = resolution[4]  # dataset의 업체명
+        res_title = resolution[4]  # dataset의 결의서 제목
+        res_money_value = resolution[7]  # dataset의 차변
         insert_result = "" # 이걸 그래프의 n.n입 으로쓸거임
 
         row = None
-        for idx, institution in enumerate(institutions):
-            if institution in res_title:
-                row = idx
-                break
-
-        func_excel.insert_value_to_first_empty_cell(file, row, )
+        for idx, keyword in enumerate(keywords): # 검색어 루프
+            for money_value in money_values: # 금액 루프
+                if keyword in res_title and money_value == res_money_value: # 검색어가 data_set의 결의서 제목에 포함되고, 금액까지 같다면?
+                    row = idx
+                    insert_result += format_date(resolution[2])
+                    break
+                insert_value_to_merged_cell(file, row, insert_result)
 
 
 def extract_and_compute_difference(text):
@@ -57,7 +62,7 @@ def extract_and_compute_difference(text):
     return numbers, difference
 
 
-def insert_value_to_first_empty_cell(filename, row, text):
+def insert_value_to_merged_cell(filename, row, text):
     # 엑셀 파일 열기
     workbook = load_workbook(filename)
     sheet = workbook.active  # 활성 시트 선택
@@ -77,24 +82,40 @@ def insert_value_to_first_empty_cell(filename, row, text):
         return_value = "반기"
     elif difference == 12:
         cells_to_merge = 12
-        return_value = "연"
+        return_value = "년"
     else:
         cells_to_merge = 1
         return_value = "월"
 
-    # 주어진 행(row)에서 가장 처음으로 비어있는 열 찾기
-    column = 1  # 열 인덱스
-    while True:
-        cell = sheet.cell(row, column)
-        if cell.value is None:
-            # 필요한 칸 수만큼 셀 병합
-            sheet.merge_cells(row, column, row, column + cells_to_merge - 1)
-            sheet.cell(row, column).value = text
-            break
-        column += 1
+    # 날짜에 맞는 열 찾기
+    column = func_excel.get_column_from_date(sheet, text)
 
-    # 변경 내용을 저장하고 파일 닫기
-    workbook.save(filename)
+    cell = sheet.cell(row=row, column=column)
+
+    # 지정된 행(row)과 찾은 열(column)에 값 입력
+    if cell.value is None:  # 셀이 비어있다면
+        # 필요한 칸 수만큼 셀 병합
+        sheet.merge_cells(row, column, row, column + cells_to_merge - 1)
+        sheet.cell(row, column).value = text
+        # 변경 내용을 저장
+        workbook.save(filename)
+
+    # 파일 닫기
     workbook.close()
 
     return return_value
+
+def format_date(date_str):
+    # 문자열을 '.'을 기준으로 분리
+    parts = date_str.split('.')
+
+    # 연, 월, 일을 각각 추출
+    year, month, day = parts[0], parts[1], parts[2]
+
+    # 월과 일을 두 자리 숫자로 변환 (한 자리 수일 경우 앞에 0을 추가)
+    month = month.zfill(2)
+    day = day.zfill(2)
+
+    # 변환된 문자열을 반환
+    formatted_date = f"{month}.{day}입"
+    return formatted_date

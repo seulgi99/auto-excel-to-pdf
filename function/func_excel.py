@@ -1,5 +1,6 @@
 from openpyxl.styles import PatternFill
 from openpyxl import load_workbook
+import re
 
 
 def check_line(sheet):
@@ -88,20 +89,20 @@ def get_column_data(filename, column):
     return data
 
 
-def insert_value_to_first_empty_cell(filename, row, value):
-    # 엑셀 파일 열기
-    workbook = load_workbook(filename)
-    sheet = workbook.active  # 활성 시트 선택
+def get_column_from_date(sheet, date_text):
+    # 날짜 형식에서 연도와 월 추출
+    match = re.match(r'(\d{4})\.(\d{2})\.\d{2}', date_text)
+    if not match:
+        raise ValueError("날짜 형식이 잘못되었습니다. 형식을 다음과 같이 맞춰주세요 : YYYY.MM.DD")
 
-    # 주어진 행(row)에서 가장 처음으로 비어있는 열 찾기
-    column = 1  # 열 인덱스
-    while True:
-        cell = sheet.cell(row, column)
-        if cell.value is None:
-            cell.value = value
-            break
-        column += 1
+    year = match.group(1)[2:]  # 연도의 마지막 두 자리
+    month = str(int(match.group(2))) + '월'  # 앞에 '0'을 제거한 월
 
-    # 변경 내용을 저장하고 파일 닫기
-    workbook.save(filename)
-    workbook.close()
+    # L열부터 탐색
+    start_column = 12  # L열의 인덱스는 12
+    for col in range(start_column, sheet.max_column + 1):
+        cell_value = sheet.cell(row=1, column=col).value  # 첫 행에서 찾기
+        if cell_value and f"{year}.{month}" in cell_value:
+            return col
+
+    raise ValueError(f"No column found for date {date_text}")
