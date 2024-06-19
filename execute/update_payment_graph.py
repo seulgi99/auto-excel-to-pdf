@@ -9,7 +9,7 @@ import re
 
 # file : 그래프를 그리는 파일, data_set : 정보를 가져오는 파일
 def execute(file, data_set):
-    # data set 가져오기 (엑셀 파일 형식의 2차원배열)
+    # data set에서 계정과목명이 대여료및사용료 인 것만 가져오기 (엑셀 파일 형식의 2차원배열)
     data = func_excel.get_history_data_set_info(data_set)
 
     # 그래프의 검색어 모두 가져오기
@@ -18,26 +18,32 @@ def execute(file, data_set):
     for keyword in filtered_keywords:
         print(keyword)
 
+    # 그래프의 구분(D열) 모두 가져오기
+    partition = func_excel.get_column_data(file, 'D')
+
     # 그래프의 금액 모두 가져오기
     money_values = func_excel.get_column_data(file, 'F')
 
     # data_set에서 뽑아온 결의 한 행 마다 루프 (resolution : 결의)
     for resolution in data:
+        res_code = resolution[19]  # dataset의 관리코드명 - 그래프 파일의 검색어와 동일
+        res_money_value = resolution[8]  # dataset의 대변
+        res_subject_name = resolution[16]  # dataset의 계정과목명
         res_title = resolution[4]  # dataset의 결의서 제목
-        res_money_value = resolution[7]  # dataset의 차변
 
-        print("res_title: ", res_title)
-        print("res_money_value: ", res_money_value)
+        print("관리코드명 : ", res_code)
+        print("대변 : ", res_money_value)
+        print("계정과목명(대여료및사용료) : ", res_subject_name)
 
         row = None
         for idx, keyword in enumerate(filtered_keywords):  # 검색어 루프
             for money_value in money_values:  # 금액 루프
-                if keyword in res_title and money_value == res_money_value:  # 검색어가 data_set의 결의서 제목에 포함되고, 금액까지 같다면?
+                if keyword == res_code and money_value == res_money_value and keyword in res_title:  # 검색어가 data_set의 결의서 제목에 포함되고, 금액까지 같다면?
                     row = idx
                     print("전표일자(resolution[2]) : ", resolution[2])
-                    insert_result = format_date(resolution[2])  # resolution[2] : dataset의 전표일자, insert_result : n.n입
-                    print("insert result : ", insert_result)
-                    insert_value_to_merged_cell(file, row, res_title, resolution[2], insert_result)
+                    insert_result = format_date(resolution[2])  # resolution[2] : dataset의 전표일자
+                    print("insert result : ", insert_result)  # insert_result : n.n입
+                    insert_value_to_merged_cell(file, row, res_code, resolution[2], insert_result)
 
 
 def extract_and_compute_difference(text):

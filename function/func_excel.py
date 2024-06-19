@@ -55,6 +55,24 @@ def delete_column(sheet, column, start_row, end_row):
         sheet[cell].value = None
 
 
+def get_filtered_data(filename, sheet_name, target_column, filter_value):
+    # 엑셀 파일 열기
+    workbook = load_workbook(filename)
+    sheet = workbook[sheet_name]
+
+    # 필터링된 행들을 저장할 리스트
+    filtered_rows = []
+
+    # 헤더 포함 행 번호 시작 (일반적으로 1행은 헤더)
+    for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
+        # Q 열의 값 확인 (Q 열은 17번째 열에 해당)
+        if row[target_column - 1].value == filter_value:
+            # 조건에 맞는 행을 필터링된 리스트에 추가
+            filtered_rows.append([cell.value for cell in row])
+
+    return filtered_rows
+
+
 def get_history_data_set_info(data_set):
     # 엑셀 파일 열기
     workbook = load_workbook(data_set)
@@ -65,10 +83,12 @@ def get_history_data_set_info(data_set):
 
     # 모든 행을 반복하면서 A부터 AG열의 값을 가져오기
     for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=1, max_col=33):  # A부터 AG까지 33개의 열
-        row_data = []
-        for cell in row:
-            row_data.append(cell.value)
-        data.append(row_data)
+        # Q 열의 값 확인 (Q 열은 17번째 열에 해당)
+        if row[16].value == '대여료및사용료':  # Q 열은 인덱스 16에 해당 - 대여료 및 사용료인 것들만 뽑아오기
+            row_data = []
+            for cell in row:
+                row_data.append(cell.value)
+            data.append(row_data)
 
     return data
 
