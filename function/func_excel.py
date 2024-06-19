@@ -91,9 +91,9 @@ def get_column_data(filename, column):
 
 def get_column_from_date(sheet, date_text):
     # 날짜 형식에서 연도와 월 추출
-    match = re.match(r'(\d{4})\.(\d{2})\.\d{2}', date_text)
+    match = re.match(r'(\d{4})-(\d{2})-(\d{2})', date_text)
     if not match:
-        raise ValueError("날짜 형식이 잘못되었습니다. 형식을 다음과 같이 맞춰주세요 : YYYY.MM.DD")
+        raise ValueError("날짜 형식이 잘못되었습니다. 형식을 다음과 같이 맞춰주세요 : YYYY-MM-DD")
 
     year = match.group(1)[2:]  # 연도의 마지막 두 자리
     month = str(int(match.group(2))) + '월'  # 앞에 '0'을 제거한 월
