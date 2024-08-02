@@ -35,11 +35,21 @@ def execute(file, data_set):
             print(f'상호명 : {business_name}')
             # 금액 뽑아오기 (B17 위치)
             price = str(int(new_sheet.Range("B17").Value))
+            # 이메일 뽑아오기 (Y17 위치)
+            email = str(int(new_sheet.Range("Y17").Value))
 
             file_name = ""
-            for data in data_set_info:
-                if business_name == data[0] and price == data[1]:
-                    file_name = data[2] + " " + data[3] + "월"
+            # 산학협력일 시 email 비교
+            if business_name == "홍익대학교 산학협력단":
+                for data in data_set_info:
+                    if email == data[2]:
+                        file_name = data[3] + " " + data[4] + "월"
+
+            else:
+                for data in data_set_info:
+                    if business_name == data[0] and price == data[1]:
+                        file_name = data[3] + " " + data[4] + "월"
+
 
             if file_name == "":
                 file_name = "기타"
@@ -83,10 +93,11 @@ def get_data_set_info(data_set):
     for i in range(end_row - 2):
         line = []
         row = i + 3
-        line.append(str(data_set_sheet[f'A{row}'].value)) # 상호명
-        line.append(str(data_set_sheet[f'B{row}'].value)) # 금액
-        line.append(str(data_set_sheet[f'C{row}'].value)) # 생성할 파일 명
-        line.append(str(data_set_sheet[f'D{row}'].value)) # 월
+        line.append(str(data_set_sheet[f'A{row}'].value))  # 상호명 data[0]
+        line.append(str(data_set_sheet[f'B{row}'].value))  # 금액   data[1]
+        line.append(str(data_set_sheet[f'C{row}'].value))  # 이메일 data[2]
+        line.append(str(data_set_sheet[f'D{row}'].value))  # 생성할 파일 명 data[3]
+        line.append(str(data_set_sheet[f'E{row}'].value))  # 월    data[4]
         data_set_info.append(line)
 
     workbook.close()

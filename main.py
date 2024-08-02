@@ -9,7 +9,7 @@ if __name__ == '__main__':
         print('작업종류')
         print('1: 거래내역조회서 pdf변환 자동화')
         print('2: 전자세금계산서 pdf변환 자동화')
-        print('3: 위탁운영업체 납부 현황 그래프 그리기')
+        # print('3: 위탁운영업체 납부 현황 그래프 그리기')
         execute_type = input('작업 종류를 입력해주세요: ')
 
         if execute_type == '1':
@@ -24,10 +24,10 @@ if __name__ == '__main__':
             if file != "" and data_set != "":
                 convert_tax_bill.execute(file, data_set)
 
-        elif execute_type == '3':
-            file = os_command.get_xlsx_file()
-            data_set = os_command.get_data_set_xlsx_file("dataset_graph")
-            update_payment_graph.execute(file, data_set)
+        # elif execute_type == '3':
+        #     file = os_command.get_xlsx_file()
+        #     data_set = os_command.get_data_set_xlsx_file("dataset_graph")
+        #     update_payment_graph.execute(file, data_set)
 
         else:
             print('해당하는 작업이 없습니다. 다시 입력해주세요.')

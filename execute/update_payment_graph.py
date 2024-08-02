@@ -12,8 +12,8 @@ def execute(file, data_set):
     # data set에서 계정과목명이 대여료및사용료 인 것만 가져오기 (엑셀 파일 형식의 2차원배열)
     data = func_excel.get_history_data_set_info(data_set)
 
-    # 그래프의 검색어 모두 가져오기
-    keywords = func_excel.get_column_data(file, 'C')
+    # 그래프의 검색어(=업체명) 모두 가져오기
+    keywords = func_excel.get_column_data(file, 'B')
     filtered_keywords = [x for x in keywords if x is not None]
     for keyword in filtered_keywords:
         print(keyword)
@@ -79,8 +79,8 @@ def extract_and_compute_difference(text):
 # insert_result: n.n입, resolution_date: dataset의 전표일자, text: dataset의 결의서제목
 def insert_value_to_merged_cell(filename, row, text, resolution_date, insert_result):
     # 엑셀 파일 열기
-    workbook = load_workbook(filename)
-    sheet = workbook.active  # 활성 시트 선택
+    workbook = openpyxl.load_workbook(filename, read_only= False)
+    sheet = workbook["서울캠"]  # 활성 시트 선택
 
     # extract_and_compute_difference 함수 호출
     _, difference = extract_and_compute_difference(text)
@@ -118,6 +118,9 @@ def insert_value_to_merged_cell(filename, row, text, resolution_date, insert_res
 
     # 지정된 행(row)과 찾은 열(column)에 값 입력
     if cell.value is None:  # 셀이 비어있다면
+
+        print("cell row = " + str(row))
+        print("cell column = " + str(column))
 
         # 필요한 칸 수만큼 셀 병합
         if cells_to_merge > 1:

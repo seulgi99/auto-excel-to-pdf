@@ -42,7 +42,9 @@ def execute(file, data_set) :
             # 월 수 지정
             month_cell = 'L' + str(target_row[0])
             month_str = str(source_sheet[month_cell].value) + "월 "
-            if source_sheet[month_cell].value == "" or source_sheet[month_cell].value is None:
+            if (source_sheet[month_cell].value == ""
+                    or source_sheet[month_cell].value is None
+                    or source_sheet[month_cell].value == "0"):
                 month_str = ""
             # 구분(입금/출금) 지정
             type_cell = 'M' + str(target_row[0])
@@ -58,7 +60,7 @@ def execute(file, data_set) :
             no_data = True # 데이터가 없는 지
             not_match = True # 금액이 일치하는 지
             for data in data_set_info:
-                if source_sheet[name_cell].value == data[2]:
+                if source_sheet[name_cell].value == data[3]:
                     no_data = False
                     if total_money == int(data[1]):
                         not_match = False
@@ -105,10 +107,11 @@ def get_data_set_info(data_set):
     for i in range(end_row - 2):
         line = []
         row = i + 3
-        line.append(str(data_set_sheet[f'A{row}'].value)) # 상호명
-        line.append(str(data_set_sheet[f'B{row}'].value)) # 금액
-        line.append(str(data_set_sheet[f'C{row}'].value)) # 생성할 파일 명
-        line.append(str(data_set_sheet[f'D{row}'].value)) # 월
+        line.append(str(data_set_sheet[f'A{row}'].value))  # 상호명 data[0]
+        line.append(str(data_set_sheet[f'B{row}'].value))  # 금액   data[1]
+        line.append(str(data_set_sheet[f'C{row}'].value))  # 이메일 data[2]
+        line.append(str(data_set_sheet[f'D{row}'].value))  # 생성할 파일 명 data[3]
+        line.append(str(data_set_sheet[f'E{row}'].value))  # 월    data[4]
         data_set_info.append(line)
 
     workbook.close()
