@@ -15,7 +15,7 @@ def check_max_index(sheet, column, start_row, end_row):
     max_index = None
 
     # 데이터 탐색 및 최대값 찾기
-    for ro in range(start_row, end_row + 1):
+    for row in range(start_row, end_row + 1):
         cell_value = sheet[f'{column}{row}'].value
         if cell_value is not None:
             if max_index is None or cell_value > max_index:

@@ -36,7 +36,7 @@ def execute(file, data_set):
             # 금액 뽑아오기 (B17 위치)
             price = str(int(new_sheet.Range("B17").Value))
             # 이메일 뽑아오기 (Y17 위치)
-            email = str(int(new_sheet.Range("Y17").Value))
+            email = str(new_sheet.Range("Y17").Value)
 
             file_name = ""
             # 산학협력일 시 email 비교

@@ -8,12 +8,15 @@ __pycache__
 hidden/**
 hidden.**
 pdf
+etc
 excel
 dataset
 history_dataset
+dataset_graph
 *.xlsx
 *.xlx
 *.pdf
 requirement.txt
 env
 venv
+.venv
