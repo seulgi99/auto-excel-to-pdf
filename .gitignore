@@ -11,6 +11,7 @@ pdf
 etc
 excel
 dataset
+dataset_graph
 history_dataset
 dataset_graph
 *.xlsx
