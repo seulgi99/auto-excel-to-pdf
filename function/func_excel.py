@@ -2,8 +2,6 @@ from openpyxl.styles import PatternFill
 from openpyxl import load_workbook
 import re
 
-# workbook.close() 추가 필요
-
 def check_line(sheet):
     max_row = sheet.max_row
     max_row = int(max_row)
@@ -148,7 +146,7 @@ def get_column_data(filename, column):
 
 def get_column_from_date(sheet, date_text):
     # 날짜 형식에서 연도와 월 추출
-    match = re.match(r'(\d{4})-(\d{2})', date_text)
+    match = re.match(r'(\d{4})-(\d{1,2})', date_text)
     if not match:
         raise ValueError("날짜 형식이 잘못되었습니다. 형식을 다음과 같이 맞춰주세요 : YYYY-MM")
 
