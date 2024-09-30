@@ -118,7 +118,10 @@ def get_file_info(file):
             break
         row_data = []
         for cell in row:
-            row_data.append(cell.value)
+            if cell.value != None:
+                row_data.append(cell.value)
+            else:
+                row_data.append(' ')
         file_data.append(row_data)
 
     workbook.close()

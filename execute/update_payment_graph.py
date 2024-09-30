@@ -29,13 +29,15 @@ def execute(file, data_set):
     file_data = func_excel.get_file_info(file)
 
     # 업체 명, 금액 리스트 표시
-    for keyword, money in file_data[:,0], file_data[:,3]:
-        print(keyword+': '+money)
+    # for keyword, money in file_data[:,0], file_data[:,3]:
+    #     print(keyword+': '+money)
 
+    print(len(deposit_data))
+    print(len(received_data))
     # tenant 임차인
     for idx, tenant in enumerate(file_data):
         name = tenant[0]
-        money = tenant[3]
+        money = str(tenant[3])
         print(name + ' ' + tenant[1] + ' ' + tenant[2] + '(' + money + '원) >>>')
 
         for resolution in deposit_data:
