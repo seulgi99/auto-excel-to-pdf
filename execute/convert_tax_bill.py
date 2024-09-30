@@ -30,20 +30,27 @@ def execute(file, data_set):
                 if ws.Name == "Sheet1":
                     ws.Delete()
 
-            # 상호명 뽑아오기 (Y4 위치)
+            # 상호명 뽑아오기 (X4 위치)
             business_name =new_sheet.Range("X4").Value
             print(f'상호명 : {business_name}')
             # 금액 뽑아오기 (B17 위치)
             price = str(int(new_sheet.Range("B17").Value))
-            # 이메일 뽑아오기 (Y17 위치)
-            email = str(new_sheet.Range("Y17").Value)
+            # 이메일 뽑아오기 (X7 위치)
+            email = str(new_sheet.Range("X7").Value)
+            if '@' in email:
+                email = email.split('@')[0]
+            else:
+                email = None
 
             file_name = ""
             # 산학협력일 시 email 비교
             if business_name == "홍익대학교 산학협력단":
-                for data in data_set_info:
-                    if email == data[2]:
-                        file_name = data[3] + " " + data[4] + "월"
+                if email == None:
+                    file_name = "홍익대학교 산학협력단 세금계산서 이메일 형식 불일치"
+                else:
+                    for data in data_set_info:
+                        if email == data[2]:
+                            file_name = data[3] + " " + data[4] + "월"
 
             else:
                 for data in data_set_info:
