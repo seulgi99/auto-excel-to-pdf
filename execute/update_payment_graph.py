@@ -32,8 +32,6 @@ def execute(file, data_set):
     # for keyword, money in file_data[:,0], file_data[:,3]:
     #     print(keyword+': '+money)
 
-    print(len(deposit_data))
-    print(len(received_data))
     # tenant 임차인
     for idx, tenant in enumerate(file_data):
         name = tenant[0]
@@ -45,12 +43,13 @@ def execute(file, data_set):
             res_money_value = resolution[8]  # dataset의 대변 (I열)
             res_title = resolution[4]  # dataset의 결의서 제목 (E열)
             res_date = resolution[2]  # dataset의 전표일자 (C열)
-            if name == res_code and money == res_money_value:
-                row = idx
+            if name == res_code and money == str(res_money_value):
+                row = idx + 2
                 print("전표일자: ", res_date)
                 insert_result = format_date(res_date)
                 print("insert result : ", insert_result)  # insert_result : n.n입
                 insert_value_to_merged_cell(file, row, res_title, res_date, insert_result)
+                print('/////')
 
         for resolution in received_data:
             res_code = resolution[19]  # dataset의 관리코드명 (T열) - 그래프 파일의 검색어와 동일
@@ -58,7 +57,7 @@ def execute(file, data_set):
             res_title = resolution[4]  # dataset의 결의서 제목 (E열)
             res_date = resolution[2]  # dataset의 전표일자 (C열)
             if name == res_code and money == res_money_value:
-                row = idx
+                row = idx + 2
                 print("**미수금 입금**")
                 print("전표일자: ", res_date)
                 insert_result = format_date(res_date)
@@ -129,16 +128,22 @@ def extract_and_compute_difference(text):
                 del numbers[0]  # [1, 2, 3, 4] -> [2, 3, 4]
                 del numbers[1]  # [2, 3, 4] -> [2, 4]
                 numbers[1] = numbers[1]+13  # 월수 차이 계산 위해 끝나는 월에 +13
+                print('년 numbers')
+                print(*numbers)
                 break
             # n~m월분 형태인 경우, 시작과 끝 숫자를 분리
             elif idx==1:
                 range_parts = re.findall(r'\d+', matches[0])
                 numbers.extend(map(int, range_parts))
+                print('분기 numbers')
+                print(*numbers)
                 break
             # # n월분 형태인 경우, 숫자만 추출
             elif idx==2:
                 month_parts = re.findall(r'\d+', matches[0])
                 numbers.extend(map(int, month_parts))
+                print('월 numbers')
+                print(*numbers)
                 break
 
     if len(numbers) == 0:
