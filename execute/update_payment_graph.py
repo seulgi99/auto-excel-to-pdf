@@ -18,6 +18,7 @@ import re
 # 위탁료 관리비 분리: 적요 / 위탁, 시설사용, 임대
 # 납부현황, 원장 관리코드명 통일
 # 연구실 동호수
+# 파브리카 정산 예외
 
 # file : 그래프를 그리는 파일, data_set : 정보를 가져오는 파일
 def execute(file, data_set):
@@ -110,9 +111,9 @@ def execute(file, data_set):
 def extract_and_compute_difference(text):
     # 정규 표현식 패턴
     patterns = [
-        r'(\d{2}.\d{1,2}~\d{2}.\d{1,2}월분)' # yy.n~yy.m월분 형태
+        r'(\d{2}.\d{1,2}~\d{2}.\d{1,2}월분)', # yy.n~yy.m월분 형태
         r'(\d{1,2}~\d{1,2}월분)',  # n~m월분 형태
-        r'(\d{1,2}월분)',  # n월분 형태
+        r'(\d{1,2}월분)'  # n월분 형태
     ]
 
     numbers = []
@@ -123,26 +124,32 @@ def extract_and_compute_difference(text):
         if matches:
             # yy.n ~ yy.m, 숫자들 분리 후 2,4 번째 숫자만 추출
             if idx==0:
-                annual_parts = re.findall(r'\d', matches[0])
+                annual_parts = re.findall(r'\d{1,2}', matches[0])
                 numbers.extend(map(int, annual_parts))
                 del numbers[0]  # [1, 2, 3, 4] -> [2, 3, 4]
                 del numbers[1]  # [2, 3, 4] -> [2, 4]
-                numbers[1] = numbers[1]+13  # 월수 차이 계산 위해 끝나는 월에 +13
-                print('년 numbers')
+                numbers[1] = numbers[1]+12  # 월수 차이 계산 위해 끝나는 월에 +13
+                print(pattern)
+                print(text)
+                print('년')
                 print(*numbers)
                 break
             # n~m월분 형태인 경우, 시작과 끝 숫자를 분리
             elif idx==1:
                 range_parts = re.findall(r'\d+', matches[0])
                 numbers.extend(map(int, range_parts))
-                print('분기 numbers')
+                print(pattern)
+                print(text)
+                print('분기')
                 print(*numbers)
                 break
             # # n월분 형태인 경우, 숫자만 추출
             elif idx==2:
                 month_parts = re.findall(r'\d+', matches[0])
                 numbers.extend(map(int, month_parts))
-                print('월 numbers')
+                print(pattern)
+                print(text)
+                print('월')
                 print(*numbers)
                 break
 
@@ -176,22 +183,8 @@ def insert_value_to_merged_cell(filename, row, text, res_date, insert_result):
     # extract_and_compute_difference 함수 호출
     date, difference = extract_and_compute_difference(text)
 
-    # 차이에 따른 칸 수와 반환 값 결정
-    if difference == 0:
-        cells_to_merge = 1
-        return_value = "월"
-    elif difference == 3:
-        cells_to_merge = 3
-        return_value = "분기"
-    elif difference == 6:
-        cells_to_merge = 6
-        return_value = "반기"
-    elif difference == 12:
-        cells_to_merge = 12
-        return_value = "년"
-    else:
-        cells_to_merge = 1
-        return_value = "월"
+    # 월수 차이에 따라 병합할 셀 수 설정
+    cells_to_merge = difference+1
 
     print("cells_to_merge", cells_to_merge)
 
@@ -225,8 +218,6 @@ def insert_value_to_merged_cell(filename, row, text, res_date, insert_result):
 
     # 파일 닫기
     workbook.close()
-
-    return return_value
 
 
 def cell_address(row, column):
